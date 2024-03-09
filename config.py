@@ -78,8 +78,6 @@ def config(args):
         args.lr_drops_final = [30, 60, 80]
         args.lr_drops_query = [3, 6, 8]
 
-    if args.strategy == ACTIVE_LEARNING:
-        args.num_inits = 1
     if args.strategy == DATA_PRUNING:
         if args.scorer_name in ['EL2N', 'GradientBased']:
             args.num_inits = 5
@@ -93,6 +91,6 @@ def config(args):
     if args.test:
         args.J = 1
         args.epochs_query = 3
-        args.epochs_final = 2
+        args.epochs_final = 3
         args.lr_drops_query = []
         args.lr_drops_final = []

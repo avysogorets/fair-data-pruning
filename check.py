@@ -7,10 +7,10 @@ def check_args(args):
         (see the assertions in their constructors).
     """
 
-    err_msg = f"start frac {args.start_frac} cannot be smaller than final frac {args.final_frac} in data pruning."
+    err_msg = f"start frac {args.start_frac} cannot be larger than final frac {args.final_frac} in active learning."
     assert not (args.final_frac < args.start_frac and args.strategy == ACTIVE_LEARNING), err_msg
 
-    err_msg = f"start frac {args.start_frac} cannot be larger than final frac {args.final_frac} in active learning."   
+    err_msg = f"start frac {args.start_frac} cannot be smaller than final frac {args.final_frac} in data pruning."   
     assert not (args.final_frac > args.start_frac and args.strategy == DATA_PRUNING), err_msg
 
     err_msg = f"StrategyQ is intended for data pruning only"
@@ -41,4 +41,4 @@ def check_args(args):
     assert not (args.quoter_name == 'MetriQ' and 0 == args.epochs_query), err_msg
 
     err_msg = f"File passed to StrtegyQ ({args.strategyq_filepath}) does not exist."
-    assert os.path.exists(args.strategyq_filepath) or args.quoter_name != 'StrategyQ', err_msg
+    assert args.quoter_name != 'StrategyQ' or os.path.exists(args.strategyq_filepath), err_msg

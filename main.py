@@ -31,18 +31,18 @@ parser.add_argument('--save', default=True, action='store_true', help='save outp
 parser.add_argument('--test', default=True, action='store_true', help='short training cycle')
 parser.add_argument('--use_gpu', default=True, action='store_true', help='whether to use GPU (if available)')
 parser.add_argument('--use_ckpt', default=False, action='store_true', help='whether to use checkpoints')
-parser.add_argument('--auto_config', action='store_true', help='auto config hyperparameters')
+parser.add_argument('--auto_config', default=True, action='store_true', help='auto config hyperparameters')
 parser.add_argument('--seed', type=int, default=42, help='global seed')
-parser.add_argument('--res_path', type=str, default='/scratch/amv458/DataSelection/res', help='path to results/output')
-parser.add_argument('--log_path', type=str, default='/scratch/amv458/DataSelection/log', help='path to execution logs')
-parser.add_argument('--ckpt_path', type=str, default='/scratch/amv458/DataSelection/ckpt', help='path to checkpoints')
+parser.add_argument('--res_path', type=str, default='res', help='path to results/output')
+parser.add_argument('--log_path', type=str, default='log', help='path to execution logs')
+parser.add_argument('--ckpt_path', type=str, default='ckpt', help='path to checkpoints')
 
 # data parameters
 parser.add_argument('--aug_score', default=False, action='store_true', help='augment dataset when scoring')
 parser.add_argument('--aug_query', default=False, action='store_true', help='augment dataset when training a query model')
 parser.add_argument('--aug_final', default=True, action='store_true', help='augment dataset when training a final model')
 parser.add_argument('--dataset_name', type=str, default='MNIST', help='dataset name')
-parser.add_argument('--data_path', type=str, default='/scratch/amv458/datasets')
+parser.add_argument('--data_path', type=str, default='datasets')
 
 # model parameters
 parser.add_argument('--model_name', type=str, default='LeNet300100', help='model name')
@@ -68,12 +68,12 @@ parser.add_argument('--quoter_metric', type=str, default='recall', help='perform
 parser.add_argument('--strategyq_filepath', type=str, default=None, help='[StrategyQ] filepath where to extract quotas from')
 
 # selection parameters
-parser.add_argument('--strategy', type=int, default=ACTIVE_LEARNING, help='selection strategy')
-parser.add_argument('--start_frac', type=float, default=0, help='start subset size')
-parser.add_argument('--final_frac', type=float, default=0, help='final subset size')
+parser.add_argument('--strategy', type=int, default=DATA_PRUNING, help='selection strategy')
+parser.add_argument('--start_frac', type=float, default=1.0, help='start subset size')
+parser.add_argument('--final_frac', type=float, default=0.5, help='final subset size')
 parser.add_argument('--num_inits', type=int, default=1, help='the number of initializations to average across')
-parser.add_argument('--scheduler_name', type=str, default='Exponential', help='subsetting scheduler')
-parser.add_argument('--iterations', type=int, default=35, help='number of subsetting iterations')
+parser.add_argument('--scheduler_name', type=str, default='Linear', help='data selecting scheduler')
+parser.add_argument('--iterations', type=int, default=1, help='number of selecting iterations')
 
 # diversifier parameters
 parser.add_argument('--diversifier_name', type=str, default='Auto', help='diversifier strategy (Auto = None)')
