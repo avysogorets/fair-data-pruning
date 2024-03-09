@@ -33,9 +33,9 @@ parser.add_argument('--use_gpu', default=False, action='store_true', help='wheth
 parser.add_argument('--use_ckpt', default=False, action='store_true', help='whether to use checkpoints')
 parser.add_argument('--auto_config', default=True, action='store_true', help='auto config hyperparameters')
 parser.add_argument('--seed', type=int, default=42, help='global seed')
-parser.add_argument('--res_path', type=str, default='res', help='path to results/output')
-parser.add_argument('--log_path', type=str, default='log', help='path to execution logs')
-parser.add_argument('--ckpt_path', type=str, default='ckpt', help='path to checkpoints')
+parser.add_argument('--res_path', type=str, default='fair-data-pruning/res', help='path to results/output')
+parser.add_argument('--log_path', type=str, default='fair-data-pruning/log', help='path to execution logs')
+parser.add_argument('--ckpt_path', type=str, default='fair-data-pruning/ckpt', help='path to checkpoints')
 
 # data parameters
 parser.add_argument('--aug_score', default=False, action='store_true', help='augment dataset when scoring')
