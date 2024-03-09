@@ -11,7 +11,7 @@ The command line flag ```--auto_config``` fills in the appropriate hyperparamete
 1. Trains a query model (possibly across multiple initializations) and retrieves sample scores;
 2. Acquires (for AL) or deletes (for DP) samples based on scores and other factors (e.g., class-wise quotas); 
 3. Potentially repeats steps 1-2 across multiple iterations (```--iterations```, common for AL);
-4. Once the ultimate dataset is determined, trains the final model and save its metrics in a json format.  
+4. Once the ultimate dataset is determined, trains the final model and saves its metrics in a json format.  
 
 ### Examples
 Here are a few simple usage examples. The commands should be executed from a parent directory of the project's folder.<br/>
