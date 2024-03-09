@@ -28,8 +28,8 @@ parser = argparse.ArgumentParser()
 
 # general parameters
 parser.add_argument('--save', default=True, action='store_true', help='save output files')
-parser.add_argument('--test', default=True, action='store_true', help='short training cycle')
-parser.add_argument('--use_gpu', default=True, action='store_true', help='whether to use GPU (if available)')
+parser.add_argument('--test', default=False, action='store_true', help='short training cycle')
+parser.add_argument('--use_gpu', default=False, action='store_true', help='whether to use GPU (if available)')
 parser.add_argument('--use_ckpt', default=False, action='store_true', help='whether to use checkpoints')
 parser.add_argument('--auto_config', default=True, action='store_true', help='auto config hyperparameters')
 parser.add_argument('--seed', type=int, default=42, help='global seed')
