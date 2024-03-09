@@ -1,0 +1,6 @@
+dask===2.1.0
+pyarrow===4.0.0
+numpy===1.20.3
+scikit-learn===0.24.0
+scipy===1.6.2
+pytorch===1.9.0
