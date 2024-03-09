@@ -9,7 +9,8 @@ class MaxEntropy(ScorerBase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.in_train = False
-        assert self.strategy == ACTIVE_LEARNING
+        err_msg = "MaxEntropy is intended for active learning only"
+        assert self.strategy == ACTIVE_LEARNING, err_msg
 
     def score(self, model, data, **kwargs):
         model.set_eval_mode()

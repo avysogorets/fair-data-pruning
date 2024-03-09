@@ -1,5 +1,5 @@
 from ..globals import ACTIVE_LEARNING
-from ..utils.utils import get_current_gradients
+from ..utils import get_current_gradients
 from .scorer_base import ScorerBase
 from tqdm.auto import tqdm
 from torch.utils.data import Subset
@@ -13,7 +13,7 @@ class GradientBased(ScorerBase):
         For active learning: https://arxiv.org/abs/1612.03226
         For data pruning: https://arxiv.org/abs/2107.07075
     """
-    
+
     def __init__(self, ly_name, **kwargs):
         super().__init__(**kwargs)
         ly_options = {
@@ -22,7 +22,8 @@ class GradientBased(ScorerBase):
             'oracle': self._oracle_ly}
         self.ly_aggrerator = ly_options[ly_name]
         self.in_train = False
-        assert not (ly_name == 'oracle' and self.strategy == ACTIVE_LEARNING)
+        err_msg = 'Cannot use label information in active learning'
+        assert not (ly_name == 'oracle' and self.strategy == ACTIVE_LEARNING), err_msg
 
     def _max_ly(self, model, dataset, **kwargs):
         model.zero_grad()

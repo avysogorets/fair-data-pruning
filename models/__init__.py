@@ -1,4 +1,4 @@
-from ..utils.utils import get_all_subclasses
+from ..utils import get_all_subclasses
 from .classification_model_base import ClassificationModelBase
 from .lenet300100 import LeNet300100
 from .lenet5 import LeNet5

@@ -13,7 +13,8 @@ class DynamicUncertainty(ScorerBase):
         self.data_length = data_length
         self.J = J
         self.epoch = 0
-        assert self.strategy == DATA_PRUNING
+        err_msg = "Dynamic Uncertainty is intended for data pruning only"
+        assert self.strategy == DATA_PRUNING, err_msg
 
     def score(self, idxs, logits, y, iter, **kwargs):
         probas = F.softmax(logits, dim=-1)
@@ -27,5 +28,5 @@ class DynamicUncertainty(ScorerBase):
             new_probas = torch.zeros(1, self.data_length)
             self.probas = torch.vstack([self.probas, new_probas])
         self.probas[-1][idxs] = probas.to(self.probas.device)
-        return self.stds/(self.epoch-self.J)
+        return (self.stds/(self.epoch-self.J)).numpy()
 

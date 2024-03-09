@@ -1,4 +1,4 @@
-from ..utils.utils import get_all_subclasses
+from ..utils import get_all_subclasses
 from .scorer_base import ScorerBase
 from .random import Random
 from .bald import BALD

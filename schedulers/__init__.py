@@ -1,4 +1,4 @@
-from ..utils.utils import get_all_subclasses
+from ..utils import get_all_subclasses
 from .scheduler_base import SchedulerBase
 from .linear import Linear
 from .exponential import Exponential

@@ -1,6 +1,4 @@
-from ..globals import ACTIVE_LEARNING, DATA_PRUNING
-from ..diversifiers.diversifier_base import DiversifierBase
-from ..data.data_base import DataBase
+from .globals import ACTIVE_LEARNING, DATA_PRUNING
 from tqdm.auto import tqdm
 from typing import Union, List
 from datetime import datetime
@@ -143,13 +141,13 @@ def dosample(local_idxs, all_idxs, select_size):
     
 
 def get_idxs_from_scores(
-        strategy: int,
-        diversifier: DiversifierBase,
-        class_quotas: Union[None, List[float]],
-        data: DataBase,
-        scores: List[float],
-        select_size: int,
-        embeddings: torch.Tensor) -> List[int]:
+        strategy,
+        diversifier,
+        class_quotas,
+        data,
+        scores,
+        select_size,
+        embeddings):
     
     curr_length = len(data.selected_idxs)
     if strategy == ACTIVE_LEARNING:
@@ -225,12 +223,9 @@ def get_specs_info(args):
     return info_msg
 
 
-def announce_iter(it, iters, num_inits, logger):
-    it = get_epoch_str(it, iters)
-    num_char = len(it)+len(str(num_inits))+31
-    s = f' ITER {it}: TRAINING {num_inits} QUERY MODELS '
+def announce_iter(logger, s):
     logger.info('='*100)
-    logger.info('='*((100-num_char)//2)+s+'='*(100-num_char-((100-num_char)//2)))
+    logger.info('='*((100-len(s))//2)+s+'='*((100-len(s))-((100-len(s))//2)))
     logger.info('='*100+'\n')
 
 
@@ -252,7 +247,7 @@ def get_iter_info(curr_iter, tot_iter, data, val_metrics, iter_time):
     info_msg = (f"[iter: {iter}/{tot_iter}]"
         f"{last_init_info}"
         f"[train idxs: {num_train} ({100*frac_train:.1f}%)]"
-        f"[iter time: {iter_time:.0f}]\n")
+        f"[iter time: {iter_time:.0f}s]\n")
     return info_msg
 
 
@@ -269,7 +264,7 @@ def get_specs(args=None):
         "scorer_name",
         "quoter_name",
         "model_name",
-        "dataset_name"
+        "dataset_name",
         "scheduler_name",
         "start_frac",
         "final_frac",

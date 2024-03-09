@@ -1,4 +1,4 @@
-from ..utils.utils import get_all_subclasses
+from ..utils import get_all_subclasses
 from .quoter_base import QuoterBase
 from .auto import Auto
 from .uniform import Uniform

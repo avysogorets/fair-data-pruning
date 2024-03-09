@@ -15,7 +15,8 @@ class DAL(ScorerBase):
         self.dal_bs = dal_bs
         self.dal_lr = dal_lr
         self.in_train = False
-        assert self.strategy == ACTIVE_LEARNING
+        err_msg = "DAL is intended for active learning only"
+        assert self.strategy == ACTIVE_LEARNING, err_msg
 
     def _train(self, discriminator, train_dataset, lr, max_epochs, batch_size, threshold):
         optimizer = torch.optim.SGD(discriminator.parameters(),lr=lr)

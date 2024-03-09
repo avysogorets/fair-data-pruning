@@ -1,4 +1,4 @@
-from ..utils.utils import get_all_subclasses
+from ..utils import get_all_subclasses
 from .diversifier_base import DiversifierBase
 from .auto import Auto
 from .cluster import Cluster

@@ -6,14 +6,15 @@ import os
 
 
 class StrategyQ(QuoterBase):
-    """ Class-quotas extracted from a reslt file
+    """ Class-quotas extracted from a result file res_path/res_fileid
+        The apprpriate result format is assumed.
     """
-    def __init__(self, **kwargs):
+    def __init__(self, strategyq_filepath, **kwargs):
         super().__init__()
+        self.strategyq_filepath = strategyq_filepath
 
-    def __call__(self, res_path, res_fileid, data, **kwargs):
-        res_filename = os.path.join(res_path, res_fileid)
-        f = open(res_filename)
+    def __call__(self, data, **kwargs):
+        f = open(self.strategyq_filepath)
         res = json.load(f)
         final_size = str(min([int(k) for k in res.keys()]))
         idxs = res[final_size]['idxs']

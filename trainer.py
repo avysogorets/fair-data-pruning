@@ -1,7 +1,7 @@
 from .models import ClassificationModelBase
 from .data import DataBase
 from .scorers import ScorerBase
-from .utils.utils import aggregate_classwise_metrics, \
+from .utils import aggregate_classwise_metrics, \
     get_epoch_str, \
     compute_overall_metrics, \
     compute_classwise_metrics, \
@@ -105,7 +105,7 @@ class Trainer:
                             idxs=idxs,
                             logits=outs.detach(),
                             y=y,
-                            iter=len(epoch_outs))
+                            iter=len(epoch_outs)-1)
             self.lr_scheduler.step()
             epoch_outs = torch.vstack(epoch_outs)
             epoch_y = torch.cat(epoch_y)
@@ -127,6 +127,11 @@ class Trainer:
         return self.metrics, self.scores
 
     def on_train_end(self):
+        if self.scorer is not None and not self.scorer.in_train:
+            self.scores = self.scorer.score(
+                    model=self.model,
+                    data=self.data,
+                    batch_size=self.select_size)
         if self.init_id >= 0:
             last_epoch = max(self.metrics['val'].keys()) if self.epoch>0 else -1
             if last_epoch < 0:
@@ -135,17 +140,12 @@ class Trainer:
                 val_loss = self.metrics['val'][last_epoch]['overall']['loss']
                 val_acc = self.metrics['val'][last_epoch]['overall']['accuracy']
                 epoch_str = get_epoch_str(last_epoch+1, self.num_epochs)
-                end_msg = f'\n[init #{self.init_id+1} completed]'\
+                end_msg = f'[init #{self.init_id+1} completed]'\
                         f'[epochs: {self.num_epochs}]'\
                         f'[{epoch_str}/{self.num_epochs}]'\
                         f'[loss: {val_loss:.3f}][acc: {val_acc:.3f}]'\
-                        f'[time: {time.time()-self.start_time:.0f}]\n'
+                        f'[time: {time.time()-self.start_time:.0f}s]\n'
             self.logger.info(end_msg)
-        if self.scorer is not None and not self.scorer.in_train:
-            self.scores = self.scorer.score(
-                    model=self.model,
-                    data=self.data,
-                    batch_size=self.select_size)
 
     def validate(self, dataset):
         self.model.set_eval_mode()

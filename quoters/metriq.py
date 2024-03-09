@@ -1,4 +1,4 @@
-from ..utils.utils import aggregate_classwise_metrics
+from ..utils import aggregate_classwise_metrics
 from .utils import get_class_sizes
 from .quoter_base import QuoterBase
 

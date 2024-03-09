@@ -11,7 +11,8 @@ class SSPY(ScorerBase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.in_train = False
-        assert self.strategy == DATA_PRUNING
+        err_msg = "SSPY is intended for data pruning only"
+        assert self.strategy == DATA_PRUNING, err_msg
 
     def score(self, model, data, **kwargs):
         model.set_eval_mode(enable_dropout=False)

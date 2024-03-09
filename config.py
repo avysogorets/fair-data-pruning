@@ -1,4 +1,4 @@
-from .globals import DATA_PRUNING
+from .globals import ACTIVE_LEARNING, DATA_PRUNING
 
 
 def config(args):
@@ -77,3 +77,22 @@ def config(args):
         args.epochs_query = 9
         args.lr_drops_final = [30, 60, 80]
         args.lr_drops_query = [3, 6, 8]
+
+    if args.strategy == ACTIVE_LEARNING:
+        args.num_inits = 1
+    if args.strategy == DATA_PRUNING:
+        if args.scorer_name in ['EL2N', 'GradientBased']:
+            args.num_inits = 5
+            args.epochs_query = int(0.1*args.epochs_final)
+            args.lr_drops_query = [int(0.1*lrd) for lrd in args.lr_drops_final]
+        if args.scorer_name in ['DynamicUncertainty', 'Forgetting', 'CoreSet']:
+            args.num_inits = 1
+            args.epochs_query = args.epochs_final
+            args.lr_drops_query = args.lr_drops_final
+
+    if args.test:
+        args.J = 1
+        args.epochs_query = 3
+        args.epochs_final = 2
+        args.lr_drops_query = []
+        args.lr_drops_final = []

@@ -16,9 +16,9 @@ class QuoterBase:
             res_path: str,
             res_fileid: str) -> List[float]:
         
-        """ Returns K valid class-wise quota for selection.
-            Valid means: quota sum to one and the selected amount
-            from each class should not exceed the amount
-            available for selection in that class.
+        """ Returns K valid class-wise quotas for selection.
+            Valid means: quotas approx. sum to one and the
+            selected amount from each class should not exceed
+            the amount available for selection in that class.
         """
         raise NotImplementedError("implement the __call__ method")

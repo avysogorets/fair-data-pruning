@@ -21,7 +21,7 @@ class MNIST(VisionDataBase):
             path,
             train=True,
             download=True,
-            transform=transform)
+            transform=pln_transform)
         test_dataset = torchvision.datasets.MNIST(
             path,
             train=False,

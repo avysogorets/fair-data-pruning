@@ -1,4 +1,4 @@
-from globals import *
+from .globals import *
 from .models import ModelFactory
 from .data import DataFactory
 from .scorers import ScorerFactory
@@ -14,8 +14,8 @@ from .utils import get_idxs_from_scores, \
     get_iter_info
 from .config import config
 from .trainer import Trainer
-from .utils import Metrics
-from check import check_args
+from .metrics import Metrics
+from .check import check_args
 from tqdm.auto import tqdm
 import os
 import numpy as np
@@ -28,6 +28,7 @@ parser = argparse.ArgumentParser()
 
 # general parameters
 parser.add_argument('--save', default=True, action='store_true', help='save output files')
+parser.add_argument('--test', default=True, action='store_true', help='short training cycle')
 parser.add_argument('--use_gpu', default=True, action='store_true', help='whether to use GPU (if available)')
 parser.add_argument('--use_ckpt', default=False, action='store_true', help='whether to use checkpoints')
 parser.add_argument('--auto_config', action='store_true', help='auto config hyperparameters')
@@ -62,9 +63,9 @@ parser.add_argument('--weight_decay', type=float, default=0, help='L2 weight dec
 parser.add_argument('--patience', type=int, default=5, help='early stpping patience (in validation epochs)')
 
 # quoter parameters
-parser.add_argument('--quoter_name', type=str, default='Auto', help='Method for class-wise quota (Auto = global pruning)')
-parser.add_argument('--quoter_metric', type=str, default='f1-score', help='metric for the MetricBased, Orcale quota method')
-parser.add_argument('--scorer_res_fileid', type=str, default=None, help='[Scorer] filepath where to extract quotas from')
+parser.add_argument('--quoter_name', type=str, default='Auto', help='method for class-wise quota (Auto means none)')
+parser.add_argument('--quoter_metric', type=str, default='recall', help='performance metric for MetriQ quoter')
+parser.add_argument('--strategyq_filepath', type=str, default=None, help='[StrategyQ] filepath where to extract quotas from')
 
 # selection parameters
 parser.add_argument('--strategy', type=int, default=ACTIVE_LEARNING, help='selection strategy')
@@ -100,6 +101,9 @@ def main(args):
     else:
         device = torch.device('cpu')
     if args.auto_config:
+        """ Caution: some user-specified cla might be
+            overriden. See config.py for further details.
+        """
         config(args)
     check_args(args)
     os.makedirs(args.res_path, exist_ok=True)
@@ -107,13 +111,6 @@ def main(args):
     os.makedirs(args.ckpt_path, exist_ok=True)
     fileid = get_fileid(args)
     res_filename = '.'.join([fileid, 'json'])
-    quoter = QuoterFactory(
-            quoter_name=args.quoter_name,
-            model_name=args.model_name,
-            quoter_metric=args.quoter_metric,
-            res_path=args.res_path,
-            res_fileid=args.scorer_res_fileid,
-            num_classes=data.num_classes)
     data = DataFactory(
             dataset_name=args.dataset_name,
             strategy=args.strategy,
@@ -127,6 +124,12 @@ def main(args):
             iterations=args.iterations,
             start_frac=args.start_frac,
             final_frac=args.final_frac)
+    quoter = QuoterFactory(
+            quoter_name=args.quoter_name,
+            model_name=args.model_name,
+            quoter_metric=args.quoter_metric,
+            strategyq_filepath=args.strategyq_filepath,
+            num_classes=data.num_classes)
 
     # Check if results already exists
     if res_filename in os.listdir(args.res_path):
@@ -153,7 +156,7 @@ def main(args):
             encoding='utf-8',
             filemode='w',
             level=logging.INFO)
-    print(f'[logs saved to {log_filename}]')
+    print(f'[logs saved to {log_filepath}]')
     logger = logging.getLogger(__name__)
     specs_info = get_specs_info(args)
     logger.info(specs_info)
@@ -162,7 +165,8 @@ def main(args):
     metrics = Metrics()
     iter_time = 0
     for it in tqdm(range(start_iter, args.iterations)):
-        announce_iter(it, args.iterations, args.num_inits, logger)
+        s = f' ITER #{it+1}/{args.iterations}: TRAINING {args.num_inits} QUERY MODELS '
+        announce_iter(logger, s)
         iter_start = time.time()
         select_size = scheduler(it)
         iter_scores = []
@@ -193,7 +197,7 @@ def main(args):
                     data=data,
                     aug_key=args.aug_query,
                     lr=args.lr,
-                    weight_decay=args.weight_decay_query,
+                    weight_decay=args.weight_decay,
                     batch_size=args.batch_size,
                     early_stopping=False,
                     patience=0,
@@ -220,9 +224,7 @@ def main(args):
                 data=data,
                 select_size=select_size,
                 metrics=iter_results['val'],
-                iter_scores=iter_scores,
-                res_path=args.res_path,
-                res_fileid=args.scorer_res_fileid)
+                iter_scores=iter_scores)
         diversifier = DiversifierFactory(
                 diversifier_name=args.diversifier_name,
                 num_clusters=args.num_clusters,
@@ -241,7 +243,7 @@ def main(args):
         data.register_selected_idxs(local_idxs)
         iter_time = time.time()-iter_start
         iter_info = get_iter_info(
-                curr_iter=it, 
+                curr_iter=it+1, 
                 tot_iter=args.iterations,
                 data=data,
                 val_metrics=iter_init_results['val'],
@@ -249,6 +251,9 @@ def main(args):
         logger.info(iter_info)
 
     # Train the final model on selected data
+    s = f' TRAINING FINAL MODEL '
+    start_time = time.time()
+    announce_iter(logger, s)
     model_final = ModelFactory(
             model_name=args.model_name,
             in_shape=data.in_shape,
@@ -264,7 +269,7 @@ def main(args):
             data=data,
             aug_key=args.aug_final,
             lr=args.lr,
-            weight_decay=args.weight_decay_final,
+            weight_decay=args.weight_decay,
             batch_size=args.batch_size,
             early_stopping=args.early_stopping,
             patience=args.patience,
@@ -277,15 +282,15 @@ def main(args):
             scorer=None,
             select_size=None,
             verbose=True,
-            use_ckpt=True,
+            use_ckpt=args.use_ckpt,
             cdbw=args.cdbw_final)
     results,_ = trainer.train()
     iter_info = get_iter_info(
             curr_iter=args.iterations, 
             tot_iter=args.iterations,
             data=data,
-            dev_metrics=results['test'],
-            iter_time=iter_time)
+            val_metrics=results['test'],
+            iter_time=time.time()-start_time)
     logger.info(iter_info)
     metrics.add(idxs=data.selected_idxs, metrics=results)
 

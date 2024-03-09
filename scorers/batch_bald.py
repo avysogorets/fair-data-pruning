@@ -13,7 +13,8 @@ class BatchBALD(ScorerBase):
         super().__init__(**kwargs)
         self.k = k
         self.in_train = False
-        self.strategy == ACTIVE_LEARNING
+        err_msg = "BatchBALD is intended for active learning only"
+        self.strategy == ACTIVE_LEARNING, err_msg
 
     def _gather_expand(self, data, dim, index):
         """ Collect probabilities of sampled classes given in index

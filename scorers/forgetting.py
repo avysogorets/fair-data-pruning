@@ -18,4 +18,4 @@ class Forgetting(ScorerBase):
         acc_drop = (accs<self.prev_accs[idxs]).long()
         self.scores[idxs] += acc_drop*coeff
         self.prev_accs[idxs] = accs.float()
-        return self.scores
+        return self.scores.numpy()
