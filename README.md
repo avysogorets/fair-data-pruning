@@ -3,7 +3,7 @@
 Code for the paper on robust data pruning.
 
 ### Quick Setup
-Install the required packages with ```pip install -r requirements.txt```
+Requires Python 3+. Install the required packages with ```pip install -r requirements.txt```
 
 ### Usage
 The project implements both active learning (AL, ```--strategy 0```) and data pruning (DP, ```--strategy 1```).
