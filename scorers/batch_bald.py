@@ -56,10 +56,10 @@ class BatchBALD(ScorerBase):
     def score(self, model, data, batch_size, **kwargs):
         assert len(model.dropout_layers)>0, "model must have dropout layers for BALD"
         model.set_eval_mode(enable_dropout=True)
-        bald = BALD(self.k)
+        bald = BALD(strategy=self.strategy, aug_key=self.aug_key, k=self.k)
         probabilities, entropies = bald.get_probabilities_and_entropies(model, data)
-        bald_scores = bald.score(probabilities, entropies)
-        idxs_to_select = torch.argmax(bald_scores).item()
+        bald_scores = bald.get_scores_from_pe(probabilities, entropies)
+        idxs_to_select = [torch.argmax(bald_scores).item()]
         scores = np.zeros((len(bald_scores)))
         while len(idxs_to_select)<batch_size:
             P_hat = self._sample_M_K(probabilities[idxs_to_select, :, :])

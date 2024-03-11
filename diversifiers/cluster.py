@@ -56,7 +56,7 @@ class Cluster(DiversifierBase):
         clusterer = km(
                 n_clusters=self.num_clusters,
                 init='random',
-                algorithm='full',
+                algorithm='lloyd',
                 n_init=2)
         cluster_ids = clusterer.fit_predict(data_X)
         return cluster_ids
@@ -64,7 +64,7 @@ class Cluster(DiversifierBase):
     def ag_ward_c(self, data_X):
         clusterer = ag(
                 n_clusters=self.num_clusters,
-                affinity=self.metric,
+                metric=self.metric,
                 linkage='ward')
         cluster_ids = clusterer.fit_predict(data_X)
         return cluster_ids
@@ -72,7 +72,7 @@ class Cluster(DiversifierBase):
     def ag_min_c(self, data_X):
         clusterer = ag(
                 n_clusters=self.num_clusters,
-                affinity=self.metric,
+                metric=self.metric,
                 linkage='single')
         cluster_ids = clusterer.fit_predict(data_X)
         return cluster_ids
@@ -80,7 +80,7 @@ class Cluster(DiversifierBase):
     def ag_avg_c(self, data_X):
         clusterer = ag(
                 n_clusters=self.num_clusters,
-                affinity=self.metric,
+                metric=self.metric,
                 linkage='average')
         cluster_ids = clusterer.fit_predict(data_X)
         return cluster_ids
@@ -88,7 +88,7 @@ class Cluster(DiversifierBase):
     def ag_max_c(self, data_X):
         clusterer = ag(
                 n_clusters=self.num_clusters,
-                affinity=self.metric,
+                metric=self.metric,
                 linkage='complete')
         cluster_ids = clusterer.fit_predict(data_X)
         return cluster_ids
@@ -132,10 +132,10 @@ class Cluster(DiversifierBase):
         clusters = self._prepare_clusters(
                 cluster_ids=cluster_ids,
                 scores=scores)
-        max_len = max(len(c) for c in clusters)
-        min_len = min(len(c) for c in clusters)
-        avg_len = np.mean(len(c) for c in clusters)
-        median_len = np.median(len(c) for c in clusters)
+        max_len = max([len(c) for c in clusters])
+        min_len = min([len(c) for c in clusters])
+        avg_len = np.mean([len(c) for c in clusters])
+        median_len = np.median([len(c) for c in clusters])
         self.logger.info(
             (f'[num clusters: {len(clusters)}]'
              f'[max: {max_len}][min: {min_len}][avg: {avg_len:.1f}][median: {median_len:.1f}]'))

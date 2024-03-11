@@ -100,6 +100,7 @@ def main(args):
         device = torch.device('cuda:0')
     else:
         device = torch.device('cpu')
+    print(f'[device: {device} is ready]')
     if args.auto_config:
         """ Caution: some user-specified cla might be
             overriden. See config.py for further details.
@@ -231,10 +232,11 @@ def main(args):
                 cluster_metric=args.cluster_metric,
                 merge_criterion=args.merge_criterion,
                 sampling_method=args.sampling_method)
-        full_embeddings = model_query.embeddings(data.full_datasets["train"][False])
+        with torch.no_grad():
+            full_embeddings = model_query.embeddings(data.full_datasets["train"][False])
         local_idxs = get_idxs_from_scores(
                 strategy=args.strategy,
-                embeddings=full_embeddings,
+                embeddings=full_embeddings.cpu(),
                 data=data,
                 diversifier=diversifier,
                 class_quotas=class_quotas,

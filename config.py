@@ -89,8 +89,8 @@ def config(args):
             args.lr_drops_query = args.lr_drops_final
 
     if args.test:
-        args.J = 1
-        args.epochs_query = 3
-        args.epochs_final = 3
+        args.J = 3
+        args.epochs_query = 4
+        args.epochs_final = 4
         args.lr_drops_query = []
         args.lr_drops_final = []

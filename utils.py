@@ -1,6 +1,5 @@
 from .globals import ACTIVE_LEARNING, DATA_PRUNING
 from tqdm.auto import tqdm
-from typing import Union, List
 from datetime import datetime
 from copy import deepcopy
 from sklearn.metrics import precision_recall_fscore_support

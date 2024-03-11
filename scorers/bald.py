@@ -26,17 +26,16 @@ class BALD(ScorerBase):
                 entropy = Categorical(probs=probas).entropy()
                 entropies[:, w] = entropy
         return probabilities.double(), entropies.double()
-
-    def score(self, model, data, **kwargs):
-        assert len(model.dropout_layers ) > 0, "model must have dropout layers for BALD"
-        model.set_eval_mode(enable_dropout=True)
-        probabilities, entropies = self.get_probabilities_and_entropies(model, data)
+    
+    def get_scores_from_pe(self, probabilities, entropies):
         mean_probability = torch.mean(probabilities, dim=1)
         entropy_of_mean = Categorical(probs=mean_probability).entropy().view(-1)
         mean_of_entropy = torch.mean(entropies, dim=1).view(-1)
         scores = entropy_of_mean - mean_of_entropy
-        return scores.cpu().numpy()
+        return scores
 
-
-
-
+    def score(self, model, data, **kwargs):
+        assert len(model.dropout_layers) > 0, "model must have dropout layers for BALD"
+        model.set_eval_mode(enable_dropout=True)
+        probabilities, entropies = self.get_probabilities_and_entropies(model, data)
+        return self.get_scores_from_pe(probabilities, entropies).cpu().numpy()
