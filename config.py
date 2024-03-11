@@ -1,4 +1,4 @@
-from .globals import ACTIVE_LEARNING, DATA_PRUNING
+from .globals import DATA_PRUNING
 
 
 def config(args):
@@ -14,9 +14,7 @@ def config(args):
         args.dataset_name = 'MNIST'
         args.early_stopping = False
         args.epochs_final = 160
-        args.epochs_query = 16
         args.lr_drops_final = [40, 80, 120]
-        args.lr_drops_query = [4, 8, 12]
 
     if args.model_name=='LeNet5':
         args.lr = 0.1
@@ -26,9 +24,7 @@ def config(args):
         args.dataset_name = 'CIFAR10'
         args.early_stopping = False
         args.epochs_final = 300
-        args.epochs_query = 30
         args.lr_drops_final = [75, 150, 225]
-        args.lr_drops_query = [8, 15, 23]
 
     if args.model_name=='VGG16':
         args.lr = 0.1
@@ -38,9 +34,7 @@ def config(args):
         args.dataset_name = 'CIFAR10'
         args.early_stopping = False
         args.epochs_final = 160
-        args.epochs_query = 16
         args.lr_drops_final = [80, 120]
-        args.lr_drops_query = [8, 12]
 
     if args.model_name=='VGG19':
         args.lr = 0.1
@@ -50,9 +44,7 @@ def config(args):
         args.dataset_name = 'CIFAR100'
         args.early_stopping = False
         args.epochs_final = 160
-        args.epochs_query = 16
         args.lr_drops_final = [80, 120]
-        args.lr_drops_query = [8, 12]
 
     if args.model_name=='ResNet18':
         args.lr = 0.2
@@ -62,9 +54,7 @@ def config(args):
         args.dataset_name = 'TinyImageNet'
         args.early_stopping = False
         args.epochs_final = 200
-        args.epochs_query = 20
         args.lr_drops_final = [100, 150]
-        args.lr_drops_query = [10, 15]
 
     if args.model_name=='ResNet50':
         args.lr = 0.4
@@ -74,9 +64,7 @@ def config(args):
         args.dataset_name = 'ImageNet'
         args.early_stopping = False
         args.epochs_final = 90
-        args.epochs_query = 9
         args.lr_drops_final = [30, 60, 80]
-        args.lr_drops_query = [3, 6, 8]
 
     if args.strategy == DATA_PRUNING:
         if args.scorer_name in ['EL2N', 'GradientBased']:
