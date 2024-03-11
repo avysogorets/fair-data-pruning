@@ -1,4 +1,4 @@
-from ..scorers.coreset import CoreSet
+from ..scorers.coreset import CoreSet as CS
 from .diversifier_base import DiversifierBase
 from scipy.spatial import distance_matrix
 import numpy as np
@@ -12,7 +12,7 @@ class CoreSet(DiversifierBase):
 
     def __init__(self, **kwargs):
         super().__init__()
-        self.coreset = CoreSet(strategy=1, aug_key=False)
+        self.coreset = CS(strategy=1, aug_key=False)
     
     def fit(self, data_X, **kwargs):
         self.data_X = data_X.numpy()
