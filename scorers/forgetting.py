@@ -9,7 +9,8 @@ class Forgetting(ScorerBase):
         self.in_train = True
         self.prev_accs = torch.zeros(data_length)
         self.scores = torch.zeros(data_length)
-        assert self.strategy == DATA_PRUNING
+        err_msg = "Forgetting is intended for data pruning only"
+        assert self.strategy == DATA_PRUNING, err_msg
 
     def score(self, idxs, logits, y, coeff=1, **kwargs):
         y_preds = torch.argmax(logits, dim=-1).squeeze()
