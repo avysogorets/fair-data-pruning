@@ -90,7 +90,7 @@ def epochs_correction(data, epochs, lr_drops):
     """
     if epochs == 0:
         return 0, []
-    original_length = len(data.full_datasets["train"][False])
+    original_length = data.full_length
     current_length = len(data.selected_idxs)
     C = 0.5
     coefficient = C+(1-C)*current_length/original_length
