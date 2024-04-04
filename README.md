@@ -3,7 +3,9 @@
 Code for the paper on robust data pruning.
 
 ### Quick Setup
-Requires Python 3+. Install packages by ```pip install -r requirements.txt```
+Requires Python 3+.
+1. Create a conda environment: ```conda env create -f environment.yml```,
+2. Activate the environment: ```conda activate environment```.
 
 ### Usage
 The project implements both active learning (AL, ```--strategy 0```) and data pruning (DP, ```--strategy 1```).
