@@ -33,6 +33,6 @@ booktitle = {Proceedings of the 13th International Conference on Learning Repres
 pages = {1--25},
 year = {2025},
 series = {Proceedings of Machine Learning Research},
-month = {24--28 APr},
+month = {24--28 Apr},
 publisher = {PMLR}}
 ```
