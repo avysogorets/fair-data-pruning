@@ -25,7 +25,8 @@ Here are a few simple usage examples. The commands should be executed from a par
 ```python -m drop-data-pruning.main --auto_config --use_gpu --cdbw_final --strategy 1 --final_frac 0.7 --model_name VGG16 --scorer_name Random```<br/>
 
 ### Cite us
-```@InProceedings{vysogorets2025drop,
+```
+@InProceedings{vysogorets2025drop,
 title = {DRoP: Distributionally Robust Data Pruning},
 author = {Vysogorets, Artem and Ahuja, Kartik and Kempe, Julia},
 booktitle = {Proceedings of the 13th International Conference on Learning Representations},
