@@ -37,8 +37,8 @@ def check_args(args):
     err_msg = f"Sliding window J ({args.J}) is larger than training length {args.epochs_query} of the query model."
     assert not (args.J > args.epochs_query and args.scorer_name == 'DynamicUncertainty'), err_msg
 
-    err_msg = f"MetriQ requires a trained query model. Increase the number of query epochs ({args.epochs_query})"
-    assert not (args.quoter_name == 'MetriQ' and 0 == args.epochs_query), err_msg
+    err_msg = f"DroP requires a trained query model. Increase the number of query epochs ({args.epochs_query})"
+    assert not (args.quoter_name == 'DRoP' and 0 == args.epochs_query), err_msg
 
     err_msg = f"File passed to StrtegyQ ({args.strategyq_filepath}) does not exist."
     assert args.quoter_name != 'StrategyQ' or os.path.exists(args.strategyq_filepath), err_msg

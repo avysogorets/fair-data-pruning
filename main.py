@@ -64,7 +64,7 @@ parser.add_argument('--patience', type=int, default=5, help='early stpping patie
 
 # quoter parameters
 parser.add_argument('--quoter_name', type=str, default='Auto', help='method for class-wise quota (Auto means none)')
-parser.add_argument('--quoter_metric', type=str, default='recall', help='performance metric for MetriQ quoter')
+parser.add_argument('--quoter_drop', type=str, default='recall', help='performance metric for DRoP quoter')
 parser.add_argument('--strategyq_filepath', type=str, default=None, help='[StrategyQ] filepath where to extract quotas from')
 
 # selection parameters
@@ -128,7 +128,7 @@ def main(args):
     quoter = QuoterFactory(
             quoter_name=args.quoter_name,
             model_name=args.model_name,
-            quoter_metric=args.quoter_metric,
+            quoter_drop=args.quoter_drop,
             strategyq_filepath=args.strategyq_filepath,
             num_classes=data.num_classes)
 

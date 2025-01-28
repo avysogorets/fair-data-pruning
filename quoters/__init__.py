@@ -4,7 +4,7 @@ from .auto import Auto
 from .uniform import Uniform
 from .strategyq import StrategyQ
 from .normalize import Normalize
-from .metriq import MetriQ
+from .drop import DRoP
 
 
 def QuoterFactory(quoter_name, **kwargs):

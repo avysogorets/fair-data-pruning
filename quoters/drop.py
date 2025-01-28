@@ -3,7 +3,7 @@ from .utils import get_class_sizes
 from .quoter_base import QuoterBase
 
 
-class MetriQ(QuoterBase):
+class DRoP(QuoterBase):
     def __init__(self, quoter_metric, **kwargs):
         super().__init__()
         self.quoter_metric = quoter_metric
