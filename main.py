@@ -132,7 +132,7 @@ def main(args):
             strategyq_filepath=args.strategyq_filepath,
             num_classes=data.num_classes)
 
-    # Check if results already exists
+    # Check if results already exist
     if res_filename in os.listdir(args.res_path):
         print('[res file for this configuration already exists.]')
         return
@@ -219,7 +219,7 @@ def main(args):
             iter_results['test'].append(iter_init_results['test'])
             iter_scores.append(scores)
 
-        # Select data after the iteration
+        # Select data after iteration
         iter_scores = np.mean(iter_scores, axis=0).tolist()
         class_quotas = quoter(
                 data=data,
